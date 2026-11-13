@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MYCARE.COM</title>
+<meta name="theme-color" content="#1769d2">
+<meta name="description" content="MYCARE - notes, medicine stock, medicine reminders and checkup reminders.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+
+<style>
+:root{--blue:#1769d2;--deep:#104b9b;--pale:#eef5ff;--ink:#17243a;--muted:#6b7890;--line:#e4eaf2;--white:#fff;--bg:#f5f8fc;--red:#d94b55;--green:#15966a}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:650}.primary{background:var(--blue);color:white}.primary:hover{background:var(--deep)}.soft{background:var(--pale);color:var(--deep)}.danger{background:#fff0f0;color:var(--red)}.muted{color:var(--muted)}
+#auth{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#eaf3ff,#f8fbff 55%,#e7f0ff)}
+.auth-card{background:white;width:min(440px,100%);padding:32px;border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 55px #174b8b18}
+.logo{display:flex;align-items:center;gap:11px;font-weight:850;font-size:22px;color:var(--deep)}.logo-mark{height:42px;width:42px;border-radius:13px;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:23px}
+h1{font-size:25px;margin:24px 0 6px}p{line-height:1.5}.field{display:grid;gap:6px;margin:14px 0}.field label{font-size:13px;font-weight:700;color:#43516a}.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1px solid #d9e1ec;border-radius:10px;outline:none;background:white}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1769d21a}.wide{width:100%;margin-top:8px}.switch{text-align:center;font-size:14px;margin-top:18px}.link{color:var(--blue);font-weight:700;cursor:pointer}.small{font-size:12px;color:var(--muted)}
+#app{display:none;min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:245px;background:#fff;border-right:1px solid var(--line);padding:22px 16px;display:flex;flex-direction:column;z-index:3}.side-logo{padding:0 9px 25px}.nav{display:grid;gap:6px}.nav button{background:transparent;text-align:left;color:#52617a;padding:12px;border-radius:10px}.nav button.active,.nav button:hover{background:var(--pale);color:var(--deep)}.nav .ico{display:inline-block;width:28px}.side-bottom{margin-top:auto;padding:12px 8px;border-top:1px solid var(--line);font-size:13px}
+.main{margin-left:245px;padding:28px;max-width:1500px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}.top h1{margin:0;font-size:25px}.user-pill{background:white;border:1px solid var(--line);border-radius:30px;padding:8px 13px;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:22px}.stat,.panel,.card{background:white;border:1px solid var(--line);border-radius:16px;padding:18px}.stat .num{font-size:28px;font-weight:800;margin:8px 0 2px}.stat .tag{font-size:12px;color:var(--muted)}.stat-icon{width:36px;height:36px;border-radius:11px;background:var(--pale);display:grid;place-items:center;color:var(--deep)}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:24px 0 13px}.section-head h2{font-size:18px;margin:0}.grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.list{display:grid;gap:10px}.item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}.item strong{display:block;font-size:14px}.item small{color:var(--muted)}.pill{font-size:11px;padding:5px 9px;border-radius:20px;background:var(--pale);color:var(--deep);white-space:nowrap}.pill.warn{background:#fff5e6;color:#a45b00}.pill.bad{background:#fff0f0;color:var(--red)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap}.toolbar input,.toolbar select{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:white}.table-wrap{overflow:auto;background:white;border:1px solid var(--line);border-radius:15px}table{border-collapse:collapse;width:100%;min-width:680px}th,td{text-align:left;padding:13px 15px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;background:#fbfcfe}tr:last-child td{border:0}
+.empty{text-align:center;padding:30px;color:var(--muted);font-size:14px}.hidden{display:none!important}.modal-bg{position:fixed;inset:0;background:#12233d66;display:grid;place-items:center;padding:18px;z-index:10}.modal{background:white;border-radius:18px;padding:23px;width:min(520px,100%);max-height:90vh;overflow:auto;box-shadow:0 20px 60px #10264a33}.modal h2{margin:0 0 15px;font-size:20px}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.note-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.note-card{background:white;border:1px solid var(--line);border-radius:14px;padding:15px}.note-card .file{font-size:25px;margin-bottom:10px}.note-card h3{font-size:15px;margin:0 0 5px}.note-card p{font-size:12px;color:var(--muted);margin:0 0 12px;overflow-wrap:anywhere}.note-actions{display:flex;gap:8px;flex-wrap:wrap}.note-actions button{font-size:12px;padding:7px 9px}
+.toast{position:fixed;bottom:20px;right:20px;background:#14243b;color:white;padding:12px 16px;border-radius:10px;z-index:20;box-shadow:0 8px 30px #0002}
+@media(max-width:950px){.sidebar{width:76px;padding:18px 9px}.side-logo{padding:0 8px 22px}.side-logo .brand-name,.nav .nav-text,.side-bottom .user-email{display:none}.nav button{text-align:center;font-size:0;padding:13px 5px}.nav .ico{font-size:19px;width:auto}.main{margin-left:76px;padding:22px}.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.note-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.main{padding:17px 12px}.top{align-items:flex-start;flex-direction:column}.stats{gap:9px}.stat{padding:13px}.stat .num{font-size:23px}.note-grid{grid-template-columns:1fr}.section-head{align-items:flex-start;flex-direction:column}.user-pill{display:none}}
+</style>
+</head>
+<body>
+<section id="auth">
+ <div class="auth-card">
+  <div class="logo"><div class="logo-mark">✚</div><span>MYCARE.COM</span></div>
+  <h1 id="authTitle">Welcome back</h1><p class="muted" id="authSub">Sign in to access your pharmacy study space.</p>
+  <form id="authForm">
+   <div class="field hidden" id="nameField"><label>Full name</label><input id="fullName" autocomplete="name" placeholder="Your name"></div>
+   <div class="field"><label>Email address</label><input id="email" type="email" required autocomplete="email" placeholder="student@example.com"></div>
+   <div class="field"><label>Password</label><input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="At least 6 characters"></div>
+   <button class="primary wide" id="authSubmit">Sign in</button>
+  </form>
+  <div class="switch"><span id="switchText">New here?</span> <span class="link" id="switchMode">Create an account</span></div>
+  <p class="small" style="margin-top:20px">Admin access is reserved for the authorised administrator email. All other accounts are Students.</p>
+ </div>
+</section>
+<div id="app">
+ <aside class="sidebar">
+  <div class="side-logo"><div class="logo"><div class="logo-mark">✚</div><span class="brand-name">MYCARE.COM</span></div></div>
+  <nav class="nav">
+   <button class="active" data-page="dashboard"><span class="ico">▦</span><span class="nav-text">Dashboard</span></button>
+   <button data-page="notes"><span class="ico">▤</span><span class="nav-text">My Notes</span></button>
+   <button data-page="medicines"><span class="ico">▣</span><span class="nav-text">Medicine Stock</span></button>
+   <button data-page="reminders"><span class="ico">◷</span><span class="nav-text">Reminders</span></button>
+   <button data-page="checkups"><span class="ico">✚</span><span class="nav-text">CHECKUP REMINDER</span></button>
+   <button data-page="medical"><span class="ico">✚</span><span class="nav-text">Medical Profile</span></button>
+   <button data-page="admin" id="adminNav" class="hidden"><span class="ico">⚙</span><span class="nav-text">Admin Panel</span></button>
+  </nav>
+  <div class="side-bottom"><div id="sideUser"></div><div class="user-email muted" id="sideEmail"></div><button class="soft wide" id="logout" style="margin-top:12px">↪ Log out</button></div>
+ </aside>
+ <main class="main">
+  <header class="top"><div><div class="muted" style="font-size:13px" id="today"></div><h1 id="pageTitle">Dashboard</h1></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="soft" id="installAppBtn" type="button" hidden>⬇ Install MYCARE</button><div class="user-pill" id="topUser">Student account</div></div></header>
+  <section id="dashboardPage">
+   <div class="stats">
+    <div class="stat"><div class="stat-icon">▤</div><div class="num" id="statNotes">0</div><div class="tag">Uploaded notes</div></div>
+    <div class="stat"><div class="stat-icon">▣</div><div class="num" id="statMeds">0</div><div class="tag">Medicines tracked</div></div>
+    <div class="stat"><div class="stat-icon">◷</div><div class="num" id="statReminders">0</div><div class="tag">Active reminders</div></div>
+    <div class="stat"><div class="stat-icon">!</div><div class="num" id="statLow">0</div><div class="tag">Low stock alerts</div></div>
+   </div>
+   <div class="grid2">
+    <div class="panel"><div class="section-head" style="margin-top:0"><h2>Medicine stock overview</h2><button class="soft" data-go="medicines">View all</button></div><div class="list" id="dashMeds"></div></div>
+    <div class="panel"><div class="section-head" style="margin-top:0"><h2>Upcoming reminders</h2><button class="soft" data-go="reminders">View all</button></div><div class="list" id="dashReminders"></div></div>
+   </div>
+   <div class="section-head"><h2>Recently uploaded notes</h2><button class="soft" data-go="notes">Open notes</button></div><div class="note-grid" id="dashNotes"></div>
+  </section>
+  <section id="notesPage" class="hidden">
+   <div class="section-head" style="margin-top:0"><div><h2>My study library</h2><p class="muted" style="margin:5px 0 0">Keep your B.Pharm notes organised by subject and semester.</p></div><button class="primary" id="addNote">＋ Upload notes</button></div>
+   <div class="toolbar" style="margin-bottom:15px"><input id="noteSearch" placeholder="Search notes or subject…"><select id="noteSemester"><option value="">All semesters</option><option>1st Semester</option><option>2nd Semester</option><option>3rd Semester</option><option>4th Semester</option><option>5th Semester</option><option>6th Semester</option><option>7th Semester</option><option>8th Semester</option></select></div>
+   <div class="note-grid" id="notesGrid"></div>
+  </section>
+  <section id="medicinesPage" class="hidden">
+   <div class="section-head" style="margin-top:0"><div><h2>Medicine inventory</h2><p class="muted" style="margin:5px 0 0">Track quantity, daily use, expiry and estimated days remaining.</p></div><button class="primary" id="addMedicine">＋ Add medicine</button></div>
+   <div class="table-wrap"><table><thead><tr><th>Medicine</th><th>Quantity left</th><th>Daily use</th><th>Days left</th><th>Expiry</th><th>Status</th><th></th></tr></thead><tbody id="medicineRows"></tbody></table><div class="empty hidden" id="medEmpty">No medicines added yet.</div></div>
+  </section>
+  <section id="remindersPage" class="hidden">
+   <div class="section-head" style="margin-top:0"><div><h2>Medicine reminders</h2><p class="muted" style="margin:5px 0 0">Set a time and frequency for your medicine reminders.</p></div><button class="primary" id="addReminder">＋ Add reminder</button></div>
+   <div class="panel"><div class="toolbar" style="align-items:center;justify-content:space-between;margin-bottom:12px"><span class="small">Voice alert: exact hour and minutes will be spoken.</span><button class="soft" id="soundToggle">Turn sound off</button></div>
+    <div class="grid2" style="align-items:end"><div class="field"><label>Reminder voice (choose and test)</label><select id="voiceSelect"><option value="">Loading available voices…</option></select></div><div class="field"><label>Voice sample</label><button class="soft" type="button" id="testVoice">▶ Play voice sample</button></div></div>
+    <p class="small">Available male/female voice options depend on the voices installed on your phone or browser. Select a voice and play the sample to identify the one you prefer.</p>
+    <div class="list" id="reminderRows"></div></div>
+   <p class="small" style="margin-top:12px">Browser notifications require permission. This prototype checks reminders while the website is open; it is not a substitute for a dedicated alarm or medical advice.</p>
+  </section>
+  <section id="checkupsPage" class="hidden">
+   <div class="section-head" style="margin-top:0"><div><h2>CHECKUP REMINDER</h2><p class="muted" style="margin:5px 0 0">Set weekly or monthly reminders for regular checkups.</p></div><button class="primary" id="addCheckup">＋ Add checkup reminder</button></div>
+   <div class="panel"><div class="list" id="checkupRows"></div></div>
+   <p class="small" style="margin-top:12px">Checkup reminders are personal scheduling aids. Follow the timing advised by your healthcare professional. Alerts work while this website is open.</p>
+  </section>
+  <section id="medicalPage" class="hidden">
+   <div class="section-head" style="margin-top:0"><div><h2>My Medical Profile</h2><p class="muted" style="margin:5px 0 0">Save important health details for your own reference.</p></div><span class="pill">Private profile</span></div>
+   <div class="panel">
+    <form id="medicalForm">
+     <div class="grid2">
+      <div class="field"><label>Blood group</label><select id="medBlood"><option value="">Select blood group</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option><option>Unknown</option></select></div>
+      <div class="field"><label>Chronic disease / condition</label><input id="medChronic" placeholder="e.g. Diabetes, BP, Asthma, none"></div>
+      <div class="field"><label>Medicine allergies</label><input id="medAllergies" placeholder="e.g. Penicillin, none, or not known"></div>
+      <div class="field"><label>Current medicines</label><input id="medCurrent" placeholder="Medicine name(s), if any"></div>
+      <div class="field"><label>Emergency contact name</label><input id="medEmergencyName" placeholder="Contact person"></div>
+      <div class="field"><label>Emergency contact number</label><input id="medEmergencyPhone" type="tel" placeholder="Phone number"></div>
+     </div>
+     <div class="field"><label>Other medical notes</label><textarea id="medOther" rows="4" placeholder="Any other important medical information"></textarea></div>
+     <button class="primary" type="submit">Save medical details</button>
+     <button class="soft" type="button" id="clearMedical" style="margin-left:8px">Clear details</button>
+    </form>
+   </div>
+   <p class="small" style="margin-top:12px">Privacy note: This prototype saves these details only in this browser on this device. They are not securely synced across devices or protected like a medical-record system. Avoid entering highly sensitive information on a shared device. This profile is not a substitute for professional medical records or emergency care.</p>
+  </section>
+  <section id="adminPage" class="hidden">
+   <div class="section-head" style="margin-top:0"><div><h2>Admin control centre</h2><p class="muted" style="margin:5px 0 0">Manage shared pharmacy notes, students and announcements.</p></div><span class="pill">Administrator</span></div>
+   <div class="stats">
+    <div class="stat"><div class="stat-icon">👥</div><div class="num" id="adminStudents">0</div><div class="tag">Registered accounts</div></div>
+    <div class="stat"><div class="stat-icon">📚</div><div class="num" id="adminSharedNotes">0</div><div class="tag">Shared notes</div></div>
+   </div>
+   <div class="panel">
+    <div class="section-head" style="margin-top:0"><div><h2>Upload notes for all students</h2><p class="muted" style="margin:5px 0 0">These notes appear in every student's shared library.</p></div><button class="primary" id="adminUpload">＋ Upload shared notes</button></div>
+    <div id="sharedNotesAdmin" class="note-grid"></div>
+   </div>
+   <div class="panel" style="margin-top:16px">
+    <div class="section-head" style="margin-top:0"><div><h2>Student accounts</h2><p class="muted" style="margin:5px 0 0">View accounts registered in this browser prototype.</p></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Account type</th><th>Age</th><th>Gender</th><th>Access role</th></tr></thead><tbody id="adminUserRows"></tbody></table></div>
+   </div>
+   <div class="panel" style="margin-top:16px">
+    <div class="section-head" style="margin-top:0"><div><h2>Announcement</h2><p class="muted" style="margin:5px 0 0">Post a message visible to all student accounts in this browser.</p></div></div>
+    <div class="field"><label>Message for students</label><textarea id="announcementText" rows="3" placeholder="e.g. Pharmacology notes for Unit 2 have been uploaded."></textarea></div>
+    <button class="primary" id="postAnnouncement">Publish announcement</button>
+    <div id="announcementList" style="margin-top:14px"></div>
+   </div>
+  </section>
+ </main>
+</div>
+<div id="modalRoot"></div><div id="toastRoot"></div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const read=(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+const ADMIN_EMAIL='s26053012@gmail.com';
+let users=read('bp_users',[]), current=null, mode='login', tick=null, sessionTick=null;
+const SESSION_KEY='mycare_login_session', SESSION_MS=30*24*60*60*1000;
+function saveLoginSession(user){localStorage.setItem(SESSION_KEY,JSON.stringify({email:user.email,expiresAt:Date.now()+SESSION_MS}));}
+function clearLoginSession(){localStorage.removeItem(SESSION_KEY);if(sessionTick)clearInterval(sessionTick);sessionTick=null;}
+function restoreLoginSession(){const saved=read(SESSION_KEY,null);if(!saved||!saved.email||!saved.expiresAt){clearLoginSession();return;}if(Date.now()<saved.expiresAt&&saved.expiresAt-Date.now()<SESSION_MS){saved.expiresAt=Date.now()+SESSION_MS;localStorage.setItem(SESSION_KEY,JSON.stringify(saved));}if(Date.now()>=saved.expiresAt){clearLoginSession();return;}const user=users.find(u=>u.email===saved.email);if(!user){clearLoginSession();return;}current=user;enter();startSessionExpiryCheck();}
+function startSessionExpiryCheck(){if(sessionTick)clearInterval(sessionTick);sessionTick=setInterval(()=>{const saved=read(SESSION_KEY,null);if(!saved||Date.now()>=saved.expiresAt){clearLoginSession();current=null;clearInterval(tick);$('#app').style.display='none';$('#auth').style.display='grid';$('#authForm').reset();authMode('login');toast('Your 30-day login session has expired. Please sign in again.');}},15000);}
+// Enforce the configured role whenever this app loads; never promote the first account.
+users=users.map(u=>({...u, email:(u.email||'').trim().toLowerCase(), role:(u.email||'').trim().toLowerCase()===ADMIN_EMAIL?'admin':'user', accountType:(u.email||'').trim().toLowerCase()===ADMIN_EMAIL?'admin':(u.accountType||'student')}));
+localStorage.setItem('bp_users',JSON.stringify(users));
+const key=(kind)=>`bp_${kind}_${current?.email||'guest'}`;
+const get=(kind)=>read(key(kind),[]);
+const put=(kind,val)=>localStorage.setItem(key(kind),JSON.stringify(val));
+function toast(msg){const n=$('#toastRoot');n.innerHTML=`<div class="toast">${esc(msg)}</div>`;setTimeout(()=>n.innerHTML='',2600)}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function authMode(m){
+ mode=m;
+ $('#authTitle').textContent=m==='login'?'Welcome back':'Create your account';
+ $('#authSub').textContent=m==='login'?'Sign in to access your pharmacy study space.':'Create a personal account for your notes and medicine tracker.';
+ ['nameField','accountTypeField','ageField','genderField'].forEach(id=>$('#'+id).classList.toggle('hidden',m==='login'));
+ $('#fullName').required=m==='signup';
+ $('#userAge').required=m==='signup';
+ $('#userGender').required=m==='signup';
+ $('#authSubmit').textContent=m==='login'?'Sign in':'Create account';
+ $('#switchText').textContent=m==='login'?'New here?':'Already have an account?';
+ $('#switchMode').textContent=m==='login'?'Create an account':'Sign in';
+ $('#password').autocomplete=m==='login'?'current-password':'new-password';
+}
+$('#switchMode').onclick=()=>authMode(mode==='login'?'signup':'login');
+$('#authForm').onsubmit=e=>{
+ e.preventDefault();
+ const email=$('#email').value.trim().toLowerCase(),password=$('#password').value;
+ let user=users.find(u=>(u.email||'').trim().toLowerCase()===email);
+ if(mode==='signup'){
+  if(user)return toast('An account with this email already exists.');
+  const age=Number($('#userAge').value),gender=$('#userGender').value;
+  if(!Number.isInteger(age)||age<1||age>120)return toast('Please enter a valid age.');
+  if(!gender)return toast('Please select your gender.');
+  const accountType=$('#accountType').value;
+  user={email,password,name:$('#fullName').value.trim(),accountType:email===ADMIN_EMAIL?'admin':accountType,age,gender,role:email===ADMIN_EMAIL?'admin':'user'};
+  users.push(user);
+  localStorage.setItem('bp_users',JSON.stringify(users));
+  toast(user.role==='admin'?'Admin account created.':(accountType==='patient'?'Patient account created.':'Student account created.'));
+ }else{
+  if(!user||user.password!==password)return toast('Incorrect email or password.');
+  user.role=email===ADMIN_EMAIL?'admin':'user';
+  if(email===ADMIN_EMAIL)user.accountType='admin';
+  localStorage.setItem('bp_users',JSON.stringify(users));
+ }
+ current=user;saveLoginSession(user);enter();startSessionExpiryCheck();
+};
+function enter(){$('#auth').style.display='none';$('#app').style.display='block';$('#sideUser').textContent=(current.name||'User')+(current.role==='admin'?' · Admin':' · '+(current.accountType==='patient'?'Patient':'Student'));$('#sideEmail').textContent=current.email;$('#topUser').textContent=(current.name||current.email)+(current.role==='admin'?' · Admin':' · '+(current.accountType==='patient'?'Patient':'Student'));$('#adminNav').classList.toggle('hidden',current.role!=='admin');$('#today').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'});showPage('dashboard');renderAll();if(tick)clearInterval(tick);tick=setInterval(checkReminders,30000)}
+$('#logout').onclick=()=>{clearLoginSession();current=null;clearInterval(tick);$('#app').style.display='none';$('#auth').style.display='grid';$('#authForm').reset();authMode('login')};
+function showPage(p){if(p==='admin'&&current?.role!=='admin')p='dashboard';$$('.main section[id$="Page"]').forEach(s=>s.classList.add('hidden'));$('#'+p+'Page').classList.remove('hidden');$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));$('#pageTitle').textContent=({dashboard:'Dashboard',notes:'My Notes',medicines:'Medicine Stock',reminders:'Reminders',checkups:'CHECKUP REMINDER',medical:'Medical Profile',admin:'Admin Panel'})[p];if(p==='medical')renderMedical();if(p==='notes')renderNotes();if(p==='medicines')renderMeds();if(p==='reminders'){renderReminders();refreshSoundToggle();loadVoiceOptions();}if(p==='checkups')renderCheckups();if(p==='admin')renderAdmin()}
+$$('.nav button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));$$('[data-go]').forEach(b=>b.onclick=()=>showPage(b.dataset.go));
+function modal(title,body,onSave){const root=$('#modalRoot');root.innerHTML=`<div class="modal-bg"><div class="modal"><h2>${title}</h2><form id="modalForm">${body}<div class="modal-actions"><button type="button" class="soft" id="cancelModal">Cancel</button><button class="primary">Save</button></div></form></div></div>`;$('#cancelModal').onclick=()=>root.innerHTML='';$('#modalForm').onsubmit=e=>{e.preventDefault();if(onSave(new FormData(e.target))!==false)root.innerHTML=''}}
+function addNote(){modal('Upload study notes',`<div class="field"><label>Note title</label><input name="title" required placeholder="e.g. Human Anatomy – Cell"></div><div class="field"><label>Subject</label><input name="subject" required placeholder="e.g. Human Anatomy"></div><div class="field"><label>Semester</label><select name="semester">${Array.from({length:8},(_,i)=>`<option>${i+1}${['st','nd','rd'][i]||'th'} Semester</option>`).join('')}</select></div><div class="field"><label>Choose file (PDF, image, DOC)</label><input name="file" type="file" required accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.ppt,.pptx"></div><p class="small">Files are kept in this browser only in this demo. Large files may not save.</p>`,fd=>{const f=fd.get('file');if(f.size>1500000){toast('For this demo, choose a file under 1.5 MB.');return false}const r=new FileReader();r.onload=()=>{const a=get('notes');a.unshift({id:Date.now(),title:fd.get('title'),subject:fd.get('subject'),semester:fd.get('semester'),fileName:f.name,type:f.type,data:r.result,date:new Date().toISOString()});try{put('notes',a);renderAll();toast('Notes uploaded')}catch{toast('Storage full. Try a smaller file.')}};r.readAsDataURL(f);return true})}
+$('#addNote').onclick=addNote;
+function renderNotes(){const q=($('#noteSearch').value||'').toLowerCase(),sem=$('#noteSemester').value;const personal=get('notes').map(n=>({...n,scope:'personal'})),shared=read('bp_shared_notes',[]).map(n=>({...n,scope:'shared'}));const a=[...shared,...personal].filter(n=>(!sem||n.semester===sem)&&[n.title,n.subject,n.fileName].join(' ').toLowerCase().includes(q));$('#notesGrid').innerHTML=a.length?a.map(n=>noteCard(n)).join(''):`<div class="empty">No notes found. Check back after your admin uploads notes.</div>`;bindNoteActions()}
+function noteCard(n){return `<article class="note-card"><div class="file">${n.type?.includes('pdf')?'📕':n.type?.startsWith('image/')?'🖼️':'📄'}</div><h3>${esc(n.title)}</h3><p>${esc(n.subject)} · ${esc(n.semester)}<br>${esc(n.fileName)}${n.scope==='shared'?'<br><span class="pill">Admin shared</span>':''}</p><div class="note-actions"><button class="soft" data-download="${n.id}" data-scope="${n.scope==='shared'?'shared':'personal'}">Download</button>${(n.scope==='shared'&&current?.role==='admin')?`<button class="danger" data-delshared="${n.id}">Delete</button>`:(n.scope!=='shared'&&n.scope!=='dashboard'?`<button class="danger" data-delnote="${n.id}">Delete</button>`:'')}</div></article>`}
+function bindNoteActions(){$$('[data-download]').forEach(b=>b.onclick=()=>{const pool=b.dataset.scope==='shared'?read('bp_shared_notes',[]):get('notes');const n=pool.find(x=>x.id==b.dataset.download);if(!n)return;const a=document.createElement('a');a.href=n.data;a.download=n.fileName;a.click()});$$('[data-delnote]').forEach(b=>b.onclick=()=>{if(confirm('Delete this note?')){put('notes',get('notes').filter(n=>n.id!=b.dataset.delnote));renderAll()}});$$('[data-delshared]').forEach(b=>b.onclick=()=>{if(current?.role!=='admin')return;if(confirm('Remove this shared note for all students?')){localStorage.setItem('bp_shared_notes',JSON.stringify(read('bp_shared_notes',[]).filter(n=>n.id!=b.dataset.delshared)));renderAll();renderAdmin()}})}
+$('#noteSearch').oninput=renderNotes;$('#noteSemester').onchange=renderNotes;
+
+function renderMedical(){const d=read(key('medicalProfile'),{});$('#medBlood').value=d.blood||'';$('#medChronic').value=d.chronic||'';$('#medAllergies').value=d.allergies||'';$('#medCurrent').value=d.current||'';$('#medEmergencyName').value=d.emergencyName||'';$('#medEmergencyPhone').value=d.emergencyPhone||'';$('#medOther').value=d.other||''}
+$('#medicalForm').onsubmit=e=>{e.preventDefault();const d={blood:$('#medBlood').value,chronic:$('#medChronic').value.trim(),allergies:$('#medAllergies').value.trim(),current:$('#medCurrent').value.trim(),emergencyName:$('#medEmergencyName').value.trim(),emergencyPhone:$('#medEmergencyPhone').value.trim(),other:$('#medOther').value.trim(),updatedAt:new Date().toISOString()};localStorage.setItem(key('medicalProfile'),JSON.stringify(d));toast('Medical details saved on this device')};
+$('#clearMedical').onclick=()=>{if(confirm('Clear all saved medical details for this account on this device?')){localStorage.removeItem(key('medicalProfile'));renderMedical();toast('Medical details cleared')}};
+
+function addMedicine(){modal('Add medicine',`<div class="field"><label>Medicine name</label><input name="name" required placeholder="Medicine name"></div><div class="field"><label>Current quantity (tablets / capsules / units)</label><input name="qty" type="number" min="0" step="1" required></div><div class="field"><label>Units used per day</label><input name="daily" type="number" min="0.1" step="0.1" required></div><div class="field"><label>Expiry date</label><input name="expiry" type="date" required></div><div class="field"><label>Low-stock alert threshold (days)</label><input name="threshold" type="number" min="1" value="5" required></div>`,fd=>{const a=get('meds');a.push({id:Date.now(),name:fd.get('name'),qty:+fd.get('qty'),daily:+fd.get('daily'),expiry:fd.get('expiry'),threshold:+fd.get('threshold')});put('meds',a);renderAll();toast('Medicine added')})}
+$('#addMedicine').onclick=addMedicine;
+function medStatus(m){const days=m.daily>0?Math.floor(m.qty/m.daily):0,exp=(new Date(m.expiry+'T00:00:00')-new Date())/86400000;if(exp<0)return ['Expired','bad',days];if(days<=m.threshold)return ['Low stock','warn',days];return ['In stock','',days]}
+function renderMeds(){const a=get('meds');$('#medEmpty').classList.toggle('hidden',a.length>0);$('#medicineRows').innerHTML=a.map(m=>{const [s,c,d]=medStatus(m);return `<tr><td><strong>${esc(m.name)}</strong></td><td>${m.qty}</td><td>${m.daily}</td><td>${d} days</td><td>${esc(m.expiry)}</td><td><span class="pill ${c}">${s}</span></td><td><button class="danger" data-delmed="${m.id}">Delete</button></td></tr>`}).join('');$$('[data-delmed]').forEach(b=>b.onclick=()=>{put('meds',get('meds').filter(m=>m.id!=b.dataset.delmed));renderAll()})}
+function addReminder(){const meds=get('meds');modal('Create medicine reminder',`<div class="field"><label>Medicine name</label><input name="name" list="medList" required placeholder="Medicine name"><datalist id="medList">${meds.map(m=>`<option value="${esc(m.name)}">`).join('')}</datalist></div><div class="field"><label>Reminder time</label><input name="time" type="time" required></div><div class="field"><label>Frequency</label><select name="freq"><option>Every day</option><option>Weekdays</option><option>As needed</option></select></div><div class="field"><label>खाने के हिसाब से दवा का समय</label><select name="instruction"><option value="">चुनें (वैकल्पिक)</option><option value="खाने के बाद">खाने के बाद</option><option value="खाने से पहले">खाने से पहले</option><option value="डॉक्टर के बताए अनुसार">डॉक्टर के बताए अनुसार</option></select></div>`,fd=>{const a=get('reminders');a.push({id:Date.now(),name:fd.get('name'),time:fd.get('time'),freq:fd.get('freq'),instruction:fd.get('instruction'),active:true,last:''});put('reminders',a);if('Notification'in window&&Notification.permission==='default')Notification.requestPermission();renderAll();toast('Reminder saved')})}
+$('#addReminder').onclick=addReminder;
+function refreshSoundToggle(){const b=$('#soundToggle');if(!b||!current)return;const off=localStorage.getItem('mycare_sound_'+current.email)==='off';b.textContent=off?'Turn sound on':'Turn sound off'}
+function availableVoices(){return ('speechSynthesis'in window)?speechSynthesis.getVoices():[]}
+function loadVoiceOptions(){const sel=$('#voiceSelect');if(!sel||!current)return;const voices=availableVoices();const saved=localStorage.getItem('mycare_voice_'+current.email)||'';if(!voices.length){sel.innerHTML='<option value="">No extra voices found on this device</option>';return;}const preferred=voices.filter(v=>/^hi(-|_)?in/i.test(v.lang)||/^en(-|_)?in/i.test(v.lang));const ordered=[...preferred,...voices.filter(v=>!preferred.includes(v))];sel.innerHTML=ordered.map((v,i)=>`<option value="${esc(v.voiceURI)}">${esc(v.name)} (${esc(v.lang)})</option>`).join('');if(saved&&ordered.some(v=>v.voiceURI===saved))sel.value=saved;else if(ordered.length)sel.value=ordered[0].voiceURI;sel.onchange=()=>localStorage.setItem('mycare_voice_'+current.email,sel.value)}
+if('speechSynthesis'in window)speechSynthesis.onvoiceschanged=loadVoiceOptions;
+function selectedVoice(){const saved=current&&localStorage.getItem('mycare_voice_'+current.email);return availableVoices().find(v=>v.voiceURI===saved)||availableVoices().find(v=>/^hi(-|_)?in/i.test(v.lang))||availableVoices()[0]||null}
+function speakText(text){if(!('speechSynthesis'in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='hi-IN';u.rate=0.9;const v=selectedVoice();if(v)u.voice=v;speechSynthesis.speak(u)}catch(e){}}
+$('#testVoice').onclick=()=>{if(!('speechSynthesis'in window))return toast('Speech voice is not supported in this browser.');speakText('नमस्ते। यह MYCARE रिमाइंडर की आवाज़ है। बारह बजकर दस मिनट हुए हैं।');};
+document.addEventListener('click',e=>{if(e.target&&e.target.id==='soundToggle'&&current){const k='mycare_sound_'+current.email,off=localStorage.getItem(k)==='off';if(off)localStorage.removeItem(k);else localStorage.setItem(k,'off');if(off)speakText('Medicine reminder sound on hai');refreshSoundToggle()}});
+
+function renderReminders(){const a=get('reminders');$('#reminderRows').innerHTML=a.length?a.map(r=>`<div class="item"><div><strong>${esc(r.name)} <span class="pill">${esc(r.time)}</span></strong><small>${esc(r.freq)}${r.instruction?' · '+esc(r.instruction):''}</small></div><div class="toolbar"><button class="soft" data-toggle="${r.id}">${r.active?'Pause':'Resume'}</button><button class="danger" data-delrem="${r.id}">Delete</button></div></div>`).join(''):'<div class="empty">No reminders yet. Add one to get started.</div>';$$('[data-toggle]').forEach(b=>b.onclick=()=>{const x=get('reminders'),r=x.find(r=>r.id==b.dataset.toggle);r.active=!r.active;put('reminders',x);renderAll()});$$('[data-delrem]').forEach(b=>b.onclick=()=>{put('reminders',get('reminders').filter(r=>r.id!=b.dataset.delrem));renderAll()})}
+
+function addCheckup(){modal('Add checkup reminder',`<div class="field"><label>Checkup name / type</label><input name="name" required placeholder="e.g. General health checkup, BP checkup"></div><div class="field"><label>Repeat</label><select name="repeat" id="checkupRepeat"><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div><div class="field" id="checkupWeekdayField"><label>Day of week</label><select name="weekday"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="0">Sunday</option></select></div><div class="field hidden" id="checkupMonthdayField"><label>Day of month</label><select name="monthday">${Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('')}</select></div><div class="field"><label>Reminder time</label><input name="time" type="time" required></div><div class="field"><label>Note (optional)</label><input name="note" placeholder="e.g. Bring previous reports"></div>`,fd=>{const a=get('checkups'),repeat=fd.get('repeat');a.push({id:Date.now(),name:fd.get('name'),repeat,weekday:fd.get('weekday'),monthday:fd.get('monthday'),time:fd.get('time'),note:fd.get('note'),active:true,last:''});put('checkups',a);if('Notification'in window&&Notification.permission==='default')Notification.requestPermission();renderCheckups();toast('Checkup reminder saved')});const repeat=$('#checkupRepeat');repeat.onchange=()=>{$('#checkupWeekdayField').classList.toggle('hidden',repeat.value!=='weekly');$('#checkupMonthdayField').classList.toggle('hidden',repeat.value!=='monthly')}}
+$('#addCheckup').onclick=addCheckup;
+function renderCheckups(){const a=get('checkups');$('#checkupRows').innerHTML=a.length?a.map(r=>{const schedule=r.repeat==='weekly'?['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][Number(r.weekday)]:`Monthly, day ${r.monthday}`;return `<div class="item"><div><strong>${esc(r.name)} <span class="pill">${esc(r.time)}</span></strong><small>${schedule}${r.note?' · '+esc(r.note):''} · ${r.active?'Active':'Paused'}</small></div><div class="toolbar"><button class="soft" data-checktoggle="${r.id}">${r.active?'Pause':'Resume'}</button><button class="danger" data-checkdel="${r.id}">Delete</button></div></div>`}).join(''):'<div class="empty">No checkup reminders yet. Add a weekly or monthly checkup reminder.</div>';$$('[data-checktoggle]').forEach(b=>b.onclick=()=>{const x=get('checkups'),r=x.find(r=>r.id==b.dataset.checktoggle);r.active=!r.active;put('checkups',x);renderCheckups()});$$('[data-checkdel]').forEach(b=>b.onclick=()=>{put('checkups',get('checkups').filter(r=>r.id!=b.dataset.checkdel));renderCheckups()})}
+function hindiNumber(n){const words=['शून्य','एक','दो','तीन','चार','पाँच','छह','सात','आठ','नौ','दस','ग्यारह','बारह','तेरह','चौदह','पंद्रह','सोलह','सत्रह','अठारह','उन्नीस','बीस','इक्कीस','बाईस','तेईस','चौबीस','पच्चीस','छब्बीस','सत्ताईस','अट्ठाईस','उनतीस','तीस','इकतीस','बत्तीस','तैंतीस','चौंतीस','पैंतीस','छत्तीस','सैंतीस','अड़तीस','उनतालीस','चालीस','इकतालीस','बयालीस','तैंतालीस','चवालीस','पैंतालीस','छियालीस','सैंतालीस','अड़तालीस','उनचास','पचास','इक्यावन','बावन','तिरेपन','चौवन','पचपन','छप्पन','सत्तावन','अट्ठावन','उनसठ'];return words[n]||String(n)}
+function spokenTime(hm){const [h,m]=hm.split(':').map(Number),hour=h%12||12;return m?`${hindiNumber(hour)} बजकर ${hindiNumber(m)} मिनट`:`${hindiNumber(hour)} बजे`}
+function adminUploadNotes(){if(current?.role!=='admin')return;modal('Upload notes for all students',`<div class="field"><label>Note title</label><input name="title" required placeholder="e.g. Pharmacology Unit 1"></div><div class="field"><label>Subject</label><input name="subject" required placeholder="e.g. Pharmacology"></div><div class="field"><label>Semester</label><select name="semester">${Array.from({length:8},(_,i)=>`<option>${i+1}${['st','nd','rd'][i]||'th'} Semester</option>`).join('')}</select></div><div class="field"><label>Choose file (PDF, image, DOC, PPT)</label><input name="file" type="file" required accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.ppt,.pptx"></div><p class="small">This demo accepts files up to 1.5 MB and stores them in this browser only.</p>`,fd=>{const f=fd.get('file');if(f.size>1500000){toast('For this demo, choose a file under 1.5 MB.');return false}const r=new FileReader();r.onload=()=>{const a=read('bp_shared_notes',[]);a.unshift({id:Date.now(),title:fd.get('title'),subject:fd.get('subject'),semester:fd.get('semester'),fileName:f.name,type:f.type,data:r.result,date:new Date().toISOString(),uploadedBy:current.email});try{localStorage.setItem('bp_shared_notes',JSON.stringify(a));renderAll();renderAdmin();toast('Shared notes published for students')}catch{toast('Browser storage full. Try a smaller file.')}};r.readAsDataURL(f);return true})}
+function renderAdmin(){if(current?.role!=='admin')return;const shared=read('bp_shared_notes',[]);$('#adminStudents').textContent=users.filter(u=>u.role!=='admin').length;$('#adminSharedNotes').textContent=shared.length;$('#sharedNotesAdmin').innerHTML=shared.length?shared.map(n=>({...n,scope:'shared'})).map(noteCard).join(''):'<div class="empty">No shared notes uploaded yet.</div>';bindNoteActions();$('#adminUserRows').innerHTML=users.map(u=>`<tr><td>${esc(u.name||'User')}</td><td>${esc(u.email)}</td><td><span class="pill">${u.accountType==='patient'?'Patient':u.accountType==='admin'?'Admin':'Student'}</span></td><td>${u.age?esc(String(u.age)):'—'}</td><td>${esc(u.gender||'—')}</td><td><span class="pill">${u.role==='admin'?'Admin':'User'}</span></td></tr>`).join('');const announcements=read('bp_announcements',[]);$('#announcementList').innerHTML=announcements.map(a=>`<div class="item"><div><strong>${esc(a.text)}</strong><small>${esc(a.date)}</small></div><button class="danger" data-delannounce="${a.id}">Delete</button></div>`).join('')||'<div class="empty">No announcements posted.</div>';$$('[data-delannounce]').forEach(b=>b.onclick=()=>{localStorage.setItem('bp_announcements',JSON.stringify(read('bp_announcements',[]).filter(a=>a.id!=b.dataset.delannounce)));renderAdmin()})}
+$('#adminUpload').onclick=adminUploadNotes;
+$('#postAnnouncement').onclick=()=>{if(current?.role!=='admin')return;const v=$('#announcementText').value.trim();if(!v)return toast('Write an announcement first.');const a=read('bp_announcements',[]);a.unshift({id:Date.now(),text:v,date:new Date().toLocaleString()});localStorage.setItem('bp_announcements',JSON.stringify(a));$('#announcementText').value='';renderAdmin();toast('Announcement published')};
+
+function checkReminders(){if(!current)return;const now=new Date(),hm=now.toTimeString().slice(0,5),day=now.getDay(),date=now.toDateString();let changed=false;const a=get('reminders');a.forEach(r=>{const allowed=r.freq==='Every day'||(r.freq==='Weekdays'&&day>0&&day<6);const stamp=date+' '+hm;if(r.active&&allowed&&r.time===hm&&r.last!==stamp){const meal=(r.instruction||'').toLowerCase();let mealText='';if(meal.includes('after food')||meal.includes('खाने के बाद')||meal.includes('after meal'))mealText='खाने के बाद';else if(meal.includes('before food')||meal.includes('खाने से पहले')||meal.includes('before meal'))mealText='खाने से पहले';else if(meal.includes('doctor')||meal.includes('डॉक्टर'))mealText='डॉक्टर के बताए अनुसार';const timeText=spokenTime(r.time),spoken=`${timeText} हो गए हैं। अपनी ${r.name||'दवा'} दवा ${mealText?mealText+' ':''}ले लो।`;if(localStorage.getItem('mycare_sound_'+current.email)!=='off')speakText(spoken);if('Notification'in window&&Notification.permission==='granted')new Notification('दवा लेने का समय',{body:`${timeText} हो गए हैं। अपनी ${r.name||'दवा'} दवा ${mealText?mealText+' ':''}ले लो।`});r.last=stamp;changed=true}});if(changed)put('reminders',a);
+ const c=get('checkups');let checkupsChanged=false;c.forEach(r=>{const monthLastDay=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();const due=r.repeat==='weekly'?day===Number(r.weekday):r.repeat==='monthly'?now.getDate()===Math.min(Number(r.monthday),monthLastDay):false;const stamp=date+' '+hm;if(r.active&&due&&r.time===hm&&r.last!==stamp){const timeText=spokenTime(r.time),spoken=`${timeText} हो गए हैं। ${r.name||'आपका checkup'} का समय है।`;if(localStorage.getItem('mycare_sound_'+current.email)!=='off')speakText(spoken);if('Notification'in window&&Notification.permission==='granted')new Notification('CHECKUP REMINDER',{body:`${timeText} हो गए हैं। ${r.name||'आपका checkup'} का समय है। ${r.note||''}`});r.last=stamp;checkupsChanged=true}});if(checkupsChanged)put('checkups',c)}
+function renderAll(){renderNotes();renderMeds();renderReminders();const notes=[...read('bp_shared_notes',[]),...get('notes')],meds=get('meds'),rems=get('reminders');$('#statNotes').textContent=notes.length;$('#statMeds').textContent=meds.length;$('#statReminders').textContent=rems.filter(r=>r.active).length;$('#statLow').textContent=meds.filter(m=>medStatus(m)[1]!=='').length;$('#dashMeds').innerHTML=meds.slice(0,4).map(m=>{const [s,c,d]=medStatus(m);return `<div class="item"><div><strong>${esc(m.name)}</strong><small>${m.qty} units · approx. ${d} days left</small></div><span class="pill ${c}">${s}</span></div>`}).join('')||'<div class="empty">Your medicine list is empty.</div>';$('#dashReminders').innerHTML=rems.filter(r=>r.active).slice(0,4).map(r=>`<div class="item"><div><strong>${esc(r.name)}</strong><small>${esc(r.freq)}</small></div><span class="pill">${esc(r.time)}</span></div>`).join('')||'<div class="empty">No active reminders.</div>';$('#dashNotes').innerHTML=notes.slice(0,3).map(n=>noteCard({...n,scope:read('bp_shared_notes',[]).some(x=>x.id===n.id)?'shared':'dashboard'})).join('')||'<div class="empty">No notes uploaded yet.</div>';bindNoteActions();if(current?.role==='admin')renderAdmin();const anns=read('bp_announcements',[]);if(anns.length&&current?.role!=='admin'&&!sessionStorage.getItem('bp_seen_announcement_'+current.email)){toast('Announcement: '+anns[0].text);sessionStorage.setItem('bp_seen_announcement_'+current.email,'1')}}
+
+// MYCARE PWA installation and offline shell support.
+let mycareInstallPrompt = null;
+const mycareInstallBtn = document.getElementById('installAppBtn');
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  mycareInstallPrompt = event;
+  if (mycareInstallBtn) mycareInstallBtn.hidden = false;
+});
+if (mycareInstallBtn) {
+  mycareInstallBtn.addEventListener('click', async () => {
+    if (!mycareInstallPrompt) {
+      alert('Chrome menu (⋮) खोलें और “Add to Home screen” या “Install app” चुनें।');
+      return;
+    }
+    mycareInstallPrompt.prompt();
+    await mycareInstallPrompt.userChoice;
+    mycareInstallPrompt = null;
+    mycareInstallBtn.hidden = true;
+  });
+}
+window.addEventListener('appinstalled', () => {
+  if (mycareInstallBtn) mycareInstallBtn.hidden = true;
+});
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(err => {
+      console.warn('MYCARE offline support could not be registered:', err);
+    });
+  });
+}
+
+// Restore the same browser's login until the original 5-hour session expires.
+restoreLoginSession();
+</script>
+</body></html>
